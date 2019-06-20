@@ -1,5 +1,7 @@
 # ERC-20 RESTful service
 
+# Troy + Daniel
+
 This application provides a RESTful service for creating and managing 
 [ERC-20 tokens](https://github.com/ethereum/EIPs/issues/20). 
 It has been built using [Spring Boot](https://projects.spring.io/spring-boot/), and 

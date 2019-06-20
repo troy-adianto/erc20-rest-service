@@ -58,7 +58,7 @@ public class ContractService {
     }
 
     public String name(String contractAddress) throws Exception {
-        HumanStandardToken humanStandardToken = load(contractAddress);
+        HumanStandardToken humanStandardToken = load(contractAddress,"");
         try {
             return humanStandardToken.name().send();
         } catch (InterruptedException | ExecutionException e) {
@@ -67,8 +67,8 @@ public class ContractService {
     }
 
     public TransactionResponse<ApprovalEventResponse> approve(
-            List<String> privateFor, String contractAddress, String spender, BigInteger value) throws Exception {
-        HumanStandardToken humanStandardToken = load(contractAddress, privateFor);
+            List<String> privateFor, String contractAddress, String spender, BigInteger value,String sender) throws Exception {
+        HumanStandardToken humanStandardToken = load(contractAddress, privateFor,sender);
         try {
             TransactionReceipt transactionReceipt = humanStandardToken
                     .approve(spender, value).send();
@@ -79,7 +79,7 @@ public class ContractService {
     }
 
     public long totalSupply(String contractAddress) throws Exception {
-        HumanStandardToken humanStandardToken = load(contractAddress);
+        HumanStandardToken humanStandardToken = load(contractAddress,"");
         try {
             return extractLongValue(humanStandardToken.totalSupply().send());
         } catch (InterruptedException | ExecutionException e) {
@@ -88,8 +88,8 @@ public class ContractService {
     }
 
     public TransactionResponse<TransferEventResponse> transferFrom(
-            List<String> privateFor, String contractAddress, String from, String to, BigInteger value) throws Exception {
-        HumanStandardToken humanStandardToken = load(contractAddress, privateFor);
+            List<String> privateFor, String contractAddress, String from, String to, BigInteger value,String sender) throws Exception {
+        HumanStandardToken humanStandardToken = load(contractAddress, privateFor,sender);
         try {
             TransactionReceipt transactionReceipt = humanStandardToken
                     .transferFrom(from, to, value).send();
@@ -100,7 +100,7 @@ public class ContractService {
     }
 
     public long decimals(String contractAddress) throws Exception {
-        HumanStandardToken humanStandardToken = load(contractAddress);
+        HumanStandardToken humanStandardToken = load(contractAddress,"");
         try {
             return extractLongValue(humanStandardToken.decimals().send());
         } catch (InterruptedException | ExecutionException e) {
@@ -109,7 +109,7 @@ public class ContractService {
     }
 
     public String version(String contractAddress) throws Exception {
-        HumanStandardToken humanStandardToken = load(contractAddress);
+        HumanStandardToken humanStandardToken = load(contractAddress,"");
         try {
             return humanStandardToken.version().send();
         } catch (InterruptedException | ExecutionException e) {
@@ -118,7 +118,7 @@ public class ContractService {
     }
 
     public long balanceOf(String contractAddress, String ownerAddress) throws Exception {
-        HumanStandardToken humanStandardToken = load(contractAddress);
+        HumanStandardToken humanStandardToken = load(contractAddress,"");
         try {
             return extractLongValue(humanStandardToken.balanceOf(ownerAddress).send());
         } catch (InterruptedException | ExecutionException e) {
@@ -127,7 +127,7 @@ public class ContractService {
     }
 
     public String symbol(String contractAddress) throws Exception {
-        HumanStandardToken humanStandardToken = load(contractAddress);
+        HumanStandardToken humanStandardToken = load(contractAddress,"");
         try {
             return humanStandardToken.symbol().send();
         } catch (InterruptedException | ExecutionException e) {
@@ -136,8 +136,8 @@ public class ContractService {
     }
 
     public TransactionResponse<TransferEventResponse> transfer(
-            List<String> privateFor, String contractAddress, String to, BigInteger value) throws Exception {
-        HumanStandardToken humanStandardToken = load(contractAddress, privateFor);
+            List<String> privateFor, String contractAddress, String to, BigInteger value,String sender) throws Exception {
+        HumanStandardToken humanStandardToken = load(contractAddress, privateFor,sender);
         try {
             TransactionReceipt transactionReceipt = humanStandardToken
                     .transfer(to, value).send();
@@ -150,7 +150,7 @@ public class ContractService {
     public TransactionResponse<ApprovalEventResponse> approveAndCall(
             List<String> privateFor, String contractAddress, String spender, BigInteger value,
             String extraData) throws Exception {
-        HumanStandardToken humanStandardToken = load(contractAddress, privateFor);
+        HumanStandardToken humanStandardToken = load(contractAddress, privateFor,"");
         try {
             TransactionReceipt transactionReceipt = humanStandardToken
                     .approveAndCall(
@@ -164,7 +164,7 @@ public class ContractService {
     }
 
     public long allowance(String contractAddress, String ownerAddress, String spenderAddress) throws Exception {
-        HumanStandardToken humanStandardToken = load(contractAddress);
+        HumanStandardToken humanStandardToken = load(contractAddress,"");
         try {
             return extractLongValue(humanStandardToken.allowance(
                     ownerAddress, spenderAddress)
@@ -174,16 +174,22 @@ public class ContractService {
         }
     }
 
-    private HumanStandardToken load(String contractAddress, List<String> privateFor) {
+    private HumanStandardToken load(String contractAddress, List<String> privateFor,String fromAddress) {
+        if (fromAddress.isEmpty()){
+            fromAddress = nodeConfiguration.getFromAddress();
+        }
         TransactionManager transactionManager = new ClientTransactionManager(
-                quorum, nodeConfiguration.getFromAddress(), privateFor);
+                quorum, fromAddress, privateFor);
         return HumanStandardToken.load(
                 contractAddress, quorum, transactionManager, GAS_PRICE, GAS_LIMIT);
     }
 
-    private HumanStandardToken load(String contractAddress) {
+    private HumanStandardToken load(String contractAddress,String fromAddress) {
+        if (fromAddress.isEmpty()){
+            fromAddress = nodeConfiguration.getFromAddress();
+        }
         TransactionManager transactionManager = new ClientTransactionManager(
-                quorum, nodeConfiguration.getFromAddress(), Collections.emptyList());
+                quorum, fromAddress, Collections.emptyList());
         return HumanStandardToken.load(
                 contractAddress, quorum, transactionManager, GAS_PRICE, GAS_LIMIT);
     }

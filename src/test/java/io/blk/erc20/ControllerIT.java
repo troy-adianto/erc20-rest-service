@@ -64,7 +64,7 @@ public class ControllerIT {
                 nodeConfiguration.getFromAddress(), contractSpecification.getInitialAmount());
 
         Controller.ApproveRequest approveRequest = new Controller.ApproveRequest(
-                OTHER_ACCOUNT, BigInteger.valueOf(10000));
+                OTHER_ACCOUNT, BigInteger.valueOf(10000),"");
         verifyApproveTx(contractAddress, approveRequest);
 
         verifyAllowance(
@@ -72,7 +72,7 @@ public class ControllerIT {
                 approveRequest.getValue());
 
         Controller.TransferRequest transferRequest = new Controller.TransferRequest(
-                OTHER_ACCOUNT, BigInteger.valueOf(10000));
+                OTHER_ACCOUNT, BigInteger.valueOf(10000),"");
         verifyTransferTx(contractAddress, transferRequest);
         verifyBalanceOf(
                 contractAddress,
@@ -86,7 +86,7 @@ public class ControllerIT {
         // Needs to be performed by another account, hence this will fail
         Controller.TransferFromRequest transferFromRequest =
                 new Controller.TransferFromRequest(
-                        nodeConfiguration.getFromAddress(), OTHER_ACCOUNT, BigInteger.valueOf(1000));
+                        nodeConfiguration.getFromAddress(), OTHER_ACCOUNT, BigInteger.valueOf(1000),"");
         verifyTransferFromTxFailure(contractAddress, transferFromRequest);
         // Therefore our balance remains the same
         verifyBalanceOf(

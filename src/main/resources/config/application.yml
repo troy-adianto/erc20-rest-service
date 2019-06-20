@@ -1,6 +1,6 @@
 # Port to run on
 server:
-  port: ${port:8080}
+  port: ${port:8081}
 
 # Our log file path and name
 logging:
@@ -8,7 +8,7 @@ logging:
 
 # Endpoint of an Ethereum or Quorum node we wish to use.
 # To use IPC simply provide a file path to the socket, such as /path/to/geth.ipc
-nodeEndpoint: http://localhost:22000
+nodeEndpoint: http://129.213.94.239:22000
 
 # The Ethereum or Quorum address we wish to use when transacting.
 # Note - this address must be already unlocked in the client

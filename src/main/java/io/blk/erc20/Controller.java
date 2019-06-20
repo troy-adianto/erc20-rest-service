@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.web3j.protocol.admin.Admin;
+import org.web3j.protocol.admin.methods.response.PersonalUnlockAccount;
+import org.web3j.protocol.http.HttpService;
 
 /**
  * Controller for our ERC-20 contract API.
@@ -80,11 +83,15 @@ public class Controller {
             HttpServletRequest request,
             @PathVariable String contractAddress,
             @RequestBody ApproveRequest approveRequest) throws Exception {
+        Admin web3j = Admin.build(new HttpService(ContractService.getConfig().getNodeEndpoint()));
+        //PersonalUnlockAccount personalUnlockAccount = web3j.personalUnlockAccount(approveRequest.getSender(), "Welcome1").sendAsync().get();
+        PersonalUnlockAccount personalUnlockAccount = web3j.personalUnlockAccount(approveRequest.getSender(), "Welcome1").send();
         return ContractService.approve(
                 extractPrivateFor(request),
                 contractAddress,
                 approveRequest.getSpender(),
-                approveRequest.getValue());
+                approveRequest.getValue(),
+                approveRequest.getSender());
     }
 
     @ApiOperation("Get total supply of tokens")
@@ -111,7 +118,8 @@ public class Controller {
                 contractAddress,
                 transferFromRequest.getFrom(),
                 transferFromRequest.getTo(),
-                transferFromRequest.getValue());
+                transferFromRequest.getValue(),
+                transferFromRequest.getSender());
     }
 
     @ApiOperation("Get decimal precision of tokens")
@@ -154,11 +162,15 @@ public class Controller {
             HttpServletRequest request,
             @PathVariable String contractAddress,
             @RequestBody TransferRequest transferRequest) throws Exception {
+        Admin web3j = Admin.build(new HttpService(ContractService.getConfig().getNodeEndpoint()));
+        //PersonalUnlockAccount personalUnlockAccount = web3j.personalUnlockAccount(transferRequest.getSender(), "Welcome1").sendAsync().get();
+        PersonalUnlockAccount personalUnlockAccount = web3j.personalUnlockAccount(transferRequest.getSender(), "Welcome1").send();
         return ContractService.transfer(
                 extractPrivateFor(request),
                 contractAddress,
                 transferRequest.getTo(),
-                transferRequest.getValue());
+                transferRequest.getValue(),
+                transferRequest.getSender());
     }
 
     @ApiOperation(
@@ -214,6 +226,7 @@ public class Controller {
     static class ApproveRequest {
         private final String spender;
         private final BigInteger value;
+        private final String sender;
     }
 
     @Data
@@ -221,12 +234,14 @@ public class Controller {
         private final String from;
         private final String to;
         private final BigInteger value;
+        private final String sender;
     }
 
     @Data
     static class TransferRequest {
         private final String to;
         private final BigInteger value;
+        private final String sender;
     }
 
     @Data

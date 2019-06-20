@@ -2,7 +2,6 @@ package io.blk.erc20;
 
 import com.google.common.base.Predicates;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -24,12 +23,13 @@ import org.web3j.quorum.Quorum;
  */
 @EnableSwagger2
 @SpringBootApplication
-public class Application {
+public class Erc20RestServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(Application.class);
-        application.setBannerMode(Banner.Mode.OFF);
-        application.run(args);
+        SpringApplication.run(Erc20RestServiceApplication.class, args);
+//        SpringApplication application = new SpringApplication(Application.class);
+//        application.setBannerMode(Banner.Mode.OFF);
+//        application.run(args);
     }
 
     @Autowired
